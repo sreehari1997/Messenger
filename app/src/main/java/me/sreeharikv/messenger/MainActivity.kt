@@ -1,8 +1,11 @@
 package me.sreeharikv.messenger
 
+import android.app.Activity
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
@@ -31,7 +34,29 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        photo_button.setOnClickListener {
+            Log.d("MainActivity", "Try to show the image")
 
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, 0)
+        }
+
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(resultCode == Activity.RESULT_OK && requestCode == 0 && data != null){
+            //photo selected
+            val uri = data.data
+            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+            val bitmapDrawable = BitmapDrawable(bitmap)
+
+            photo_button.setBackgroundDrawable(bitmapDrawable)
+
+        }
     }
 
     private fun perfromaction(){
